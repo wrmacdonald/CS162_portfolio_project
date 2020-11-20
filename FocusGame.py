@@ -51,18 +51,47 @@ class Board:
     """"""
     def __init__(self):
         self._full_board_list = []
+        # initialize the coords, index 0
         for row in range(6):
             for col in range(6):
-                self._full_board_list.append([row, col])
+                self._full_board_list.append([(row, col)])
+        # initialize the game pieces, index 1
+        for x in range(0, len(self._full_board_list), 4):
+            self._full_board_list[x].append("R")
+        for x in range(1, len(self._full_board_list), 4):
+            self._full_board_list[x].append("R")
+        for x in range(2, len(self._full_board_list), 4):
+            self._full_board_list[x].append("G")
+        for x in range(3, len(self._full_board_list), 4):
+            self._full_board_list[x].append("G")
 
     def get_full_board_list(self):
         return self._full_board_list
+
+    def set_up_pieces(self):
+        pieces = []
+        for space in range(len(self._full_board_list)):
+            pieces.append("r")
+        return pieces
+
+    def show_board(self):
+        for row in range(0, 36, 6):
+            print(self._full_board_list[row],
+                  self._full_board_list[row+1],
+                  self._full_board_list[row+2],
+                  self._full_board_list[row+3],
+                  self._full_board_list[row+4],
+                  self._full_board_list[row+5],
+                  )
+
 
 
 def main():
     """for testing"""
     test_board = Board()
     print(test_board.get_full_board_list())
+    # print(test_board.set_up_pieces())
+    test_board.show_board()
 
     # READ ME
     # game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
