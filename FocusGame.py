@@ -50,12 +50,13 @@
 class Board:
     """"""
     def __init__(self):
+        """"""
         self._full_board_list = []
-        # initialize the coords, index 0
+        # initialize the coords @ index 0
         for row in range(6):
             for col in range(6):
                 self._full_board_list.append([(row, col)])
-        # initialize the game pieces, index 1
+        # initialize the game pieces @ index 1 (base level)
         for x in range(0, len(self._full_board_list), 4):
             self._full_board_list[x].append("R")
         for x in range(1, len(self._full_board_list), 4):
@@ -64,33 +65,108 @@ class Board:
             self._full_board_list[x].append("G")
         for x in range(3, len(self._full_board_list), 4):
             self._full_board_list[x].append("G")
+        # # initialize the game pieces @ index 2 (2nd level)
+        # for x in range(len(self._full_board_list)):
+        #     self._full_board_list[x].append("*")
+        # # initialize the game pieces @ index 3 (3rd level)
+        # for x in range(len(self._full_board_list)):
+        #     self._full_board_list[x].append("*")
+        # # initialize the game pieces @ index 4 (4th level)
+        # for x in range(len(self._full_board_list)):
+        #     self._full_board_list[x].append("*")
+        # # initialize the game pieces @ index 5 (5th level)
+        # for x in range(len(self._full_board_list)):
+        #     self._full_board_list[x].append("*")
 
     def get_full_board_list(self):
+        """"""
         return self._full_board_list
 
-    def set_up_pieces(self):
-        pieces = []
-        for space in range(len(self._full_board_list)):
-            pieces.append("r")
-        return pieces
+    def remove_piece(self, coord):
+        """"""
+        for loc in self._full_board_list:
+            if loc[0] == coord:
+                if loc[1] == "*":               # make error here
+                    print("there's nothing to move")
+                if len(loc) == 2:               # if there's only one piece in stack, * = empty space
+                    loc[1] = "*"
+                else:
+                    del loc[len(loc)-1]
+
+    def place_piece(self, coord, piece):
+        """"""
+        for loc in self._full_board_list:
+            if loc[0] == coord:
+                if loc[1] == "*":               # if space is empty
+                    loc[1] = piece
+                else:                           # if space is not empty, stack piece on top
+                    loc.append(piece)
 
     def show_board(self):
         for row in range(0, 36, 6):
-            print(self._full_board_list[row],
-                  self._full_board_list[row+1],
-                  self._full_board_list[row+2],
-                  self._full_board_list[row+3],
-                  self._full_board_list[row+4],
-                  self._full_board_list[row+5],
-                  )
-
+            # print(self._full_board_list[row][1],
+            #       self._full_board_list[row+1][1],
+            #       self._full_board_list[row+2][1],
+            #       self._full_board_list[row+3][1],
+            #       self._full_board_list[row+4][1],
+            #       self._full_board_list[row+5][1],
+            #       )
+            # print(f"{self._full_board_list[row][1]}{self._full_board_list[row][2]}{self._full_board_list[row][3]}"
+            #       f"{self._full_board_list[row][4]}{self._full_board_list[row][5]}",
+            #       f"{self._full_board_list[row+1][1]}{self._full_board_list[row+1][2]}{self._full_board_list[row+1][3]}"
+            #       f"{self._full_board_list[row+1][4]}{self._full_board_list[row+1][5]}",
+            #       f"{self._full_board_list[row+2][1]}{self._full_board_list[row+2][2]}{self._full_board_list[row+2][3]}"
+            #       f"{self._full_board_list[row+2][4]}{self._full_board_list[row+2][5]}",
+            #       f"{self._full_board_list[row+3][1]}{self._full_board_list[row+3][2]}{self._full_board_list[row+3][3]}"
+            #       f"{self._full_board_list[row+3][4]}{self._full_board_list[row+3][5]}",
+            #       f"{self._full_board_list[row+4][1]}{self._full_board_list[row+4][2]}{self._full_board_list[row+4][3]}"
+            #       f"{self._full_board_list[row+4][4]}{self._full_board_list[row+4][5]}",
+            #       f"{self._full_board_list[row+5][1]}{self._full_board_list[row+5][2]}{self._full_board_list[row+5][3]}"
+            #       f"{self._full_board_list[row+5][4]}{self._full_board_list[row+5][5]}"
+            #       )
+        # if len(self._full_board_list[row+1]) > 2:
+        #     for x in range(1, len(self._full_board_list[row+1])):
+        #         print(self._full_board_list[row+1][x])
+        # else:
+        #     print("*")
+            stack_amt = (len(self._full_board_list[row+1]))
+            print(stack_amt)
+            for num in range(1, stack_amt):
+                print(self._full_board_list[row+1][num], end="")
+            print((5 - (len(self._full_board_list[row+1])-1)) * "*")
+            print(self._full_board_list[row+1][1] + (len(self._full_board_list[row+1])-1) * "*")
+                  # self._full_board_list[row+1][1],
+                  # self._full_board_list[row+2][1],
+                  # self._full_board_list[row+3][1],
+                  # self._full_board_list[row+4][1],
+                  # self._full_board_list[row+5][1]
+                  # )
+        # print(3 * "*")
+        print("-----------------------------------")
 
 
 def main():
     """for testing"""
+    # test Board class
     test_board = Board()
+    # print(test_board.get_full_board_list())
+    # test_board.show_board()
+    # for x in test_board.get_full_board_list():
+    #     if x[0] == (5, 3):
+    #         print(x[1])
+    test_board.remove_piece((0, 1))
+    # test_board.show_board()
+    test_board.place_piece((0, 1), "N")
+    test_board.place_piece((0, 1), "N")
+    # print(test_board.get_full_board_list())
+    # test_board.show_board()
+    test_board.place_piece((0, 1), "R")
+    test_board.place_piece((0, 1), "G")
+    # test_board.remove_piece((0, 1))
+    # test_board.remove_piece((0, 1))
+    test_board.place_piece((1, 1), "N")
+    test_board.place_piece((1, 1), "N")
     print(test_board.get_full_board_list())
-    # print(test_board.set_up_pieces())
     test_board.show_board()
 
     # READ ME
