@@ -50,15 +50,24 @@
 
 
 class Board:
-    """"""
+    """represents a board"""
     def __init__(self, p1_color, p2_color):  # could also call player objects
-        """"""
+        """initializes a board object
+        :param p1_color: player 1 piece color
+        :type p1_color: str
+        :param p2_color: player 2 piece color
+        :type p2_color: str
+        """
+        # list to hold coords for each space on the board @ index 0, and piece(s) in a stack at that coord
+        # starting @ index 1 (bottom of stack), to the end of the list (top of stack)
         self._full_board_list = []
-        # initialize the coords @ index 0
+
+        # initialize tuples of the coords @ index 0 of the list
         for row in range(6):
             for col in range(6):
                 self._full_board_list.append([(row, col)])
-        # initialize the game pieces @ index 1 (base level)
+
+        # initialize the game pieces @ index 1 (bottom level) for game set-up
         for x in range(0, len(self._full_board_list), 4):
             self._full_board_list[x].append(p1_color)
         for x in range(1, len(self._full_board_list), 4):
@@ -67,6 +76,7 @@ class Board:
             self._full_board_list[x].append(p2_color)
         for x in range(3, len(self._full_board_list), 4):
             self._full_board_list[x].append(p2_color)
+
         # # initialize the game pieces @ index 2 (2nd level)
         # for x in range(len(self._full_board_list)):
         #     self._full_board_list[x].append("*")
@@ -81,7 +91,7 @@ class Board:
         #     self._full_board_list[x].append("*")
 
     def get_full_board_list(self):
-        """"""
+        """get method for _full_board_list"""
         return self._full_board_list
 
     # def move_pieces(self, s_coord, e_coord, num_pieces):               # remove pieces from "top" and return the pieces picked up
@@ -101,27 +111,28 @@ class Board:
     #                 loc.append(picked_up[i-1])                 # add piece (one by one) to coord
     #     return "successfully moved"
 
-    def remove_pieces(self, coord, num_pieces):             # remove pieces from "top" and return the pieces picked up
-        """"""
-        for loc in self._full_board_list:
-            if loc[0] == coord:                             # find coord
-                picked_up = []                              # hold pieces being moved
-                if num_pieces <= (len(loc)-1):              # check not trying to move more pieces than in stack
-                    for i in range(num_pieces):             # for each piece being moved
-                        picked_up += loc[len(loc)-1]        # add moved piece (from top of stack) to picked_up
-                        del loc[len(loc)-1]                 # delete moved piece (from top of stack)
-                    return picked_up                        # return stack of moved pieces
-                else:
-                    return "invalid number of pieces"       # msg if trying to move more pieces than in stack
-
-    def place_pieces(self, coord, pieces):                  # place list of pieces
-        """"""
-        for loc in self._full_board_list:
-            if loc[0] == coord:                             # find coord
-                for i in range(len(pieces), 0, -1):         # for each piece in pieces, backwards from the end
-                    loc.append(pieces[i-1])                 # add piece (one by one) to coord
+    # def remove_pieces(self, coord, num_pieces):             # remove pieces from "top" and return the pieces picked up
+    #     """"""
+    #     for loc in self._full_board_list:
+    #         if loc[0] == coord:                             # find coord
+    #             picked_up = []                              # hold pieces being moved
+    #             if num_pieces <= (len(loc)-1):              # check not trying to move more pieces than in stack
+    #                 for i in range(num_pieces):             # for each piece being moved
+    #                     picked_up += loc[len(loc)-1]        # add moved piece (from top of stack) to picked_up
+    #                     del loc[len(loc)-1]                 # delete moved piece (from top of stack)
+    #                 return picked_up                        # return stack of moved pieces
+    #             else:
+    #                 return "invalid number of pieces"       # msg if trying to move more pieces than in stack
+    #
+    # def place_pieces(self, coord, pieces):                  # place list of pieces
+    #     """"""
+    #     for loc in self._full_board_list:
+    #         if loc[0] == coord:                             # find coord
+    #             for i in range(len(pieces), 0, -1):         # for each piece in pieces, backwards from the end
+    #                 loc.append(pieces[i-1])                 # add piece (one by one) to coord
 
     def show_board(self):
+        """method to show the board in a visually understandable way, * = empty space"""
         for row in range(0, 36, 6):
             # print(self._full_board_list[row][1],
             #       self._full_board_list[row+1][1],
@@ -166,24 +177,33 @@ class Board:
 #   set_reserve_pieces:
 #       change reserve pieces
 class Player:
-    """"""
+    """represents a player"""
     def __init__(self, name, color):
-        """"""
+        """initializes a player object
+        :param name: name of player
+        :type name: str
+        :param color: color of player pieces
+        :type color: str
+        """
         self._player_name = name
         self._player_color = color
         self._captured_pieces = 0
         self._reserve_pieces = 0
 
     def get_player_name(self):
+        """get method for _player_name"""
         return self._player_name
 
     def get_player_color(self):
+        """get method for _player_color"""
         return self._player_color
 
     def get_captured_pieces(self):
+        """get method for player's _captured_pieces"""
         return self._captured_pieces
 
     def get_reserve_pieces(self):
+        """get method for player's _reserve_pieces"""
         return self._reserve_pieces
 
 
@@ -217,28 +237,53 @@ class Player:
 #       else
 #           return "no pieces in reserve"
 class FocusGame:
-    """"""
+    """represents the game"""
     def __init__(self, p1_tup, p2_tup):
-        """"""
+        """initializes a game object
+        :param p1_tup: strings of player1_name and player1_color
+        :type p1_tup: tuple
+        :param p2_tup: strings of player2_name and player2_color
+        :type p2_tup: tuple
+        """
         self._player1 = Player(p1_tup[0], p1_tup[1])
         self._player2 = Player(p2_tup[0], p2_tup[1])
         self._board = Board(self._player1.get_player_color(), self._player2.get_player_color())
-        self._turn = None
+        self._turn = None   # player object
 
     def move_piece(self, move_p_name, start_loc, end_loc, num_pieces):
-        """"""
-        p_turn = None
-        if move_p_name == self._player1.get_player_name():
-            p_turn = self._player1
-        elif move_p_name == self._player2.get_player_name():
-            p_turn = self._player2
-        else:
-            return "who's trying to butt in"
+        """move method
+        :param move_p_name: name of player who's trying to move
+        :type move_p_name: str
+        :param start_loc: coord to move pieces from
+        :type start_loc: tuple
+        :param end_loc: coord to move pieces to
+        :type end_loc: tuple
+        :param num_pieces: number of pieces to move
+        :type num_pieces: int
+        :return: status message
+        :rtype: str
+        """
+        # p_turn = None
+        # if move_p_name == self._player1.get_player_name():
+        #     p_turn = self._player1
+        # elif move_p_name == self._player2.get_player_name():
+        #     p_turn = self._player2
+        # else:
+        #     return "who's trying to butt in"
 
+        # if self._turn is None:          # on first move, set player turn
+        #     self._turn = move_p_name
         if self._turn is None:          # on first move, set player turn
-            self._turn = move_p_name
+            if move_p_name == self._player1.get_player_name():
+                self._turn = self._player1
+            elif move_p_name == self._player2.get_player_name():
+                self._turn = self._player2
+            else:
+                return "who's trying to butt in"
 
-        if move_p_name != self._turn:   # check if it's player's turn
+        # if move_p_name != self._turn:   # check if it's player's turn
+        #     return "not your turn"
+        if move_p_name != self._turn.get_player_name():   # check if it's player's turn
             return "not your turn"
 
         # invalid locations (source or destination): return "invalid location"
@@ -248,7 +293,7 @@ class FocusGame:
         picked_up = []  # hold pieces being moved
         for loc in self._board.get_full_board_list():
             if loc[0] == start_loc:  # find start coord
-                if loc[len(loc) - 1] != p_turn.get_player_color():  # check if piece on top is player's whose turn it is
+                if loc[len(loc) - 1] != self._turn.get_player_color():  # check if piece on top belongs to turn player
                     return "not your stack to move"
                 elif num_pieces <= (len(loc) - 1):  # check not trying to move more pieces than in stack
                     for i in range(num_pieces):  # for each piece being moved
@@ -260,10 +305,11 @@ class FocusGame:
             if loc[0] == end_loc:  # find coord
                 for i in range(len(picked_up), 0, -1):  # for each piece in pieces, backwards from the end
                     loc.append(picked_up[i - 1])  # add piece (one by one) to coord
+
         if move_p_name == self._player1.get_player_name():  # alternate turns
-            self._turn = self._player2.get_player_name()
+            self._turn = self._player2
         else:
-            self._turn = self._player1.get_player_name()
+            self._turn = self._player1
         return "successfully moved"
 
 #       check if stack is > 5:
@@ -271,6 +317,11 @@ class FocusGame:
 #           reserve bottom pieces that belong to current player
 #       check if player wins, either player has captured pieces >= 6
 #           return "<player_name> Wins"
+#       make sure pieces can only move num_pieces amount
+
+    def get_turn(self):
+        """get method for player_turn"""
+        return self._turn
 
 
 def main():
@@ -330,6 +381,7 @@ def main():
     # # print(game._player1.get_player_color())
     # # print(game._player2.get_player_name())
     # # print(game._player2.get_captured_pieces())
+    # print(game.move_piece("PlayerX", (0, 1), (0, 1), 1))  # wrong player
     print(game.move_piece("PlayerA", (0, 0), (0, 1), 1))
     print(game.move_piece("PlayerB", (0, 2), (0, 3), 1))
     print(game.move_piece("PlayerA", (0, 1), (0, 4), 2))
@@ -337,7 +389,9 @@ def main():
     print(game.move_piece("PlayerA", (0, 4), (0, 1), 3))
     print(game.move_piece("PlayerB", (0, 5), (0, 2), 3))
     print(game.move_piece("PlayerA", (0, 1), (0, 1), 1))
+    print(game.move_piece("PlayerX", (0, 1), (0, 1), 1))  # wrong player
     # print(game.move_piece("PlayerB", (0, 1), (0, 2), 1))
+    # print(game.get_turn().get_player_name())  # player name whose turn it is
     game._board.show_board()
 
     # READ ME
