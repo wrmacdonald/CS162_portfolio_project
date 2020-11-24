@@ -266,14 +266,42 @@ class FocusGame:
         self._board = Board(self._player1.get_player_color(), self._player2.get_player_color())
         self._turn = self._player1
 
-    def validate_move(self, ):
-        """"""
-        pass
+    def validate_move(self, player_name, start_loc, end_loc, num_pieces):
+        """checks the validity of any moves
+        returns notification messages for whether the move is valid or not"""
+        # error msgs
+        # not_your_turn = False
+        # invalid_location = False
+        # invalid_num_of_pieces = False
 
-    def move_piece(self, move_p_name, start_loc, end_loc, num_pieces):
+        if player_name != self._turn.get_player_name():   # check if it's player's turn
+            # not_your_turn = True
+            return "not your turn"
+
+        # check location is on board
+        if not -1 < start_loc[0] < 6 or not -1 < start_loc[1] < 6 or not -1 < end_loc[0] < 6 or not -1 < end_loc[1] < 6:
+            return "invalid location"
+
+        # check if end_loc is num_pieces away from start_loc
+        row_move = abs(start_loc[0] - end_loc[0])
+        column_move = abs(start_loc[1] - end_loc[1])
+        if not ((row_move == 0 and column_move == num_pieces) or (row_move == num_pieces and column_move == 0)):
+            return "invalid location"
+
+        # check stack for: if piece on top belongs to turn player, & player not trying to move more pieces than in stack
+        for loc in self._board.get_full_board_list():
+            if loc[0] == start_loc:  # find start coord
+                if loc[-1] != self._turn.get_player_color():  # check if piece on top belongs to turn player
+                    return "invalid location"
+                elif num_pieces > (len(loc) - 1):  # check not trying to move more pieces than in stack
+                    return "invalid number of pieces"
+
+        # return not_your_turn or invalid_location or invalid_num_of_pieces
+
+    def move_piece(self, player_name, start_loc, end_loc, num_pieces):
         """move method
-        :param move_p_name: name of player who's trying to move
-        :type move_p_name: str
+        :param player_name: name of player who's trying to move
+        :type player_name: str
         :param start_loc: coord to move pieces from
         :type start_loc: tuple
         :param end_loc: coord to move pieces to
@@ -284,12 +312,19 @@ class FocusGame:
         :rtype: str
         """
         # validation
-        if move_p_name != self._turn.get_player_name():   # check if it's player's turn
-            return "not your turn"
+        # if player_name != self._turn.get_player_name():   # check if it's player's turn
+        #     return "not your turn"
+        val = self.validate_move(player_name, start_loc, end_loc, num_pieces)
+        if val == "not your turn":
+            return "not your turnnnnn"
+        elif val == "invalid location":
+            return "invalid locationnnnnnn"
+        elif val == "invalid number of pieces":
+            return "invalid number of piecesssssss"
 
         # invalid locations (source or destination): return "invalid location"
-        if not -1 < start_loc[0] < 6 or not -1 < start_loc[1] < 6 or not -1 < end_loc[0] < 6 or not -1 < end_loc[1] < 6:
-            return "invalid location"
+        # if not -1 < start_loc[0] < 6 or not -1 < start_loc[1] < 6 or not -1 < end_loc[0] < 6 or not -1 < end_loc[1] < 6:
+        #     return "invalid location"
         # or if end_loc is not num_pieces away from start_loc
 
     #     Board.move_pieces(self._board, start_loc, end_loc, num_pieces, self._turn)
@@ -313,7 +348,7 @@ class FocusGame:
                     loc.append(picked_up[i - 1])  # add piece (one by one) to coord
 
         # alternate turns
-        self.set_turn(move_p_name)
+        self.set_turn(player_name)
 
         #       check if stack is > 5:
         #           capture bottom pieces that belong to other player
@@ -364,6 +399,10 @@ class FocusGame:
             self._turn = self._player2
         else:
             self._turn = self._player1
+
+    def show_board(self):
+        """shows board for current game"""
+        self._board.show_board()
 
 
 def main():
@@ -458,10 +497,25 @@ def main():
     # print(game.show_captured("PlayerB"))
     # game._board.show_board()
 
-    print(game.show_pieces((0, 0)))
-    print(game.move_piece("PlayerA", (0, 1), (0, 0), 1))
-    print(game.show_pieces((0, 0)))
-    print(game.show_pieces((5, 5)))
+    # print(game.show_pieces((0, 0)))
+    # print(game.move_piece("PlayerA", (0, 1), (0, 0), 1))
+    # print(game.show_pieces((0, 0)))
+    # print(game.show_pieces((5, 5)))
+
+    print(game.move_piece("PlayerB", (0, 2), (0, 1), 1))  # not your turn
+    print(game.move_piece("PlayerA", (6, 8), (0, 1), 1))  # invalid loc
+    print(game.move_piece("PlayerA", (0, 0), (0, 4), 1))  # invalid loc
+    print(game.move_piece("PlayerA", (0, 1), (0, 3), 4))  # invalid loc
+    print(game.move_piece("PlayerA", (2, 1), (0, 3), 2))  # invalid loc
+    print(game.move_piece("PlayerA", (0, 0), (0, 1), 1))
+    print(game.move_piece("PlayerB", (0, 2), (0, 3), 1))
+    print(game.move_piece("PlayerA", (0, 1), (0, 3), 2))
+    print(game.move_piece("PlayerB", (0, 3), (0, 1), 2))  # invalid loc
+    print(game.move_piece("PlayerB", (1, 0), (1, 1), 1))
+    print(game.move_piece("PlayerA", (0, 3), (5, 3), 5))  # invalid num of pieces
+    # print(game.validate_move("PlayerA", (0, 2), (0, 1), 1))  # invalid loc
+    # print(game.validate_move("PlayerA", (0, 1), (0, 4), 3))  # invalid num of pieces
+    game.show_board()
 
     # READ ME
     # game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
