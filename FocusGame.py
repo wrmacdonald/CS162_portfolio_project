@@ -83,7 +83,7 @@ class Board:
 
     def set_full_board_list(self):
         """set method for _full_board_list"""
-        pass
+        return self._full_board_list
 
     # def move_pieces(self, s_coord, e_coord, num_pieces):               # remove pieces from "top" and return the pieces picked up
     #     """"""
@@ -276,25 +276,27 @@ class FocusGame:
 
         if player_name != self._turn.get_player_name():   # check if it's player's turn
             # not_your_turn = True
-            return "not your turn"
+            return "n_y_t"
 
-        # check location is on board
-        if not -1 < start_loc[0] < 6 or not -1 < start_loc[1] < 6 or not -1 < end_loc[0] < 6 or not -1 < end_loc[1] < 6:
-            return "invalid location"
+        # check locations are on board
+        if not -1 < start_loc[0] < 6 or not -1 < start_loc[1] < 6:
+            return "i_s_l"
+        if not -1 < end_loc[0] < 6 or not -1 < end_loc[1] < 6:
+            return "i_e_l"
 
         # check if end_loc is num_pieces away from start_loc
         row_move = abs(start_loc[0] - end_loc[0])
         column_move = abs(start_loc[1] - end_loc[1])
         if not ((row_move == 0 and column_move == num_pieces) or (row_move == num_pieces and column_move == 0)):
-            return "invalid location"
+            return "i_l"
 
         # check stack for: if piece on top belongs to turn player, & player not trying to move more pieces than in stack
         for loc in self._board.get_full_board_list():
             if loc[0] == start_loc:  # find start coord
                 if loc[-1] != self._turn.get_player_color():  # check if piece on top belongs to turn player
-                    return "invalid location"
+                    return "i_l"
                 elif num_pieces > (len(loc) - 1):  # check not trying to move more pieces than in stack
-                    return "invalid number of pieces"
+                    return "i_n_o_p"
 
         # return not_your_turn or invalid_location or invalid_num_of_pieces
 
@@ -315,33 +317,19 @@ class FocusGame:
         # if player_name != self._turn.get_player_name():   # check if it's player's turn
         #     return "not your turn"
         val = self.validate_move(player_name, start_loc, end_loc, num_pieces)
-        if val == "not your turn":
-            return "not your turnnnnn"
-        elif val == "invalid location":
-            return "invalid locationnnnnnn"
-        elif val == "invalid number of pieces":
-            return "invalid number of piecesssssss"
+        if val == "n_y_t":
+            return "not your turn"
+        elif val == "i_l" or val == "i_s_l" or val == "i_e_l":
+            return "invalid location"
+        elif val == "i_n_o_p":
+            return "invalid number of pieces"
 
-        # invalid locations (source or destination): return "invalid location"
-        # if not -1 < start_loc[0] < 6 or not -1 < start_loc[1] < 6 or not -1 < end_loc[0] < 6 or not -1 < end_loc[1] < 6:
-        #     return "invalid location"
-        # or if end_loc is not num_pieces away from start_loc
-
-    #     Board.move_pieces(self._board, start_loc, end_loc, num_pieces, self._turn)
-    # want to move this into Board class method because it's getting verbose and is more of a board method
-    # but not sure how to get returns working correctly
         picked_up = []  # hold pieces being moved
         for loc in self._board.get_full_board_list():
             if loc[0] == start_loc:  # find start coord
-                # change these indices to -1
-                if loc[len(loc) - 1] != self._turn.get_player_color():  # check if piece on top belongs to turn player
-                    return "invalid location"
-                elif num_pieces <= (len(loc) - 1):  # check not trying to move more pieces than in stack
-                    for i in range(num_pieces):  # for each piece being moved
-                        picked_up += loc[len(loc) - 1]  # add moved piece (from top of stack) to picked_up
-                        del loc[len(loc) - 1]  # delete moved piece (from top of stack)
-                else:
-                    return "invalid number of pieces"  # msg if trying to move more pieces than in stack
+                for i in range(num_pieces):  # for each piece being moved
+                    picked_up += loc[len(loc) - 1]  # add moved piece (from top of stack) to picked_up
+                    del loc[len(loc) - 1]  # delete moved piece (from top of stack)
         for loc in self._board.get_full_board_list():
             if loc[0] == end_loc:  # find coord
                 for i in range(len(picked_up), 0, -1):  # for each piece in pieces, backwards from the end
@@ -353,16 +341,40 @@ class FocusGame:
         #       check if stack is > 5:
         #           capture bottom pieces that belong to other player
         #           reserve bottom pieces that belong to current player
+        # make a separate func to do that? then call during reserved move also?
+
         #       check if player wins, either player has captured pieces >= 6
         #           return "<player_name> Wins"
-        #       make sure pieces can only move num_pieces amount
+        # make a separate func to do that? then call during reserved move also?
 
         return "successfully moved"
 
-    def reserved_move(self, player_name, loc):
+    def reserved_move(self, player_name, location):
         """move method for moving a piece from reserve,
         return 'no pieces in reserve', if no pieces in reserve"""
-        pass
+        # validation
+        val = self.validate_move(player_name, (0, 0), location, 1)
+        if val == "n_y_t":
+            return "not your turn"
+        elif val == "i_e_l":
+            return "invalid location"
+
+        # move
+        player_obj = self.get_player_object(player_name)    # check there's pieces in player's reserve
+        if player_obj.get_reserve_pieces() <= 0:
+            return "no pieces in reserve"
+        else:                                               # add piece to board location
+            for loc in self._board.set_full_board_list():
+                if loc[0] == location:
+                    loc.append(player_obj.get_player_color())
+        player_obj.set_reserve_pieces(-1)                   # remove piece from player's reserve
+
+        # call new funcs: check height and win condition
+
+        # alternate turns
+        self.set_turn(player_name)
+
+        return "successfully moved"
 
     def show_pieces(self, loc):
         """shows pieces at a location on the board
@@ -502,19 +514,26 @@ def main():
     # print(game.show_pieces((0, 0)))
     # print(game.show_pieces((5, 5)))
 
-    print(game.move_piece("PlayerB", (0, 2), (0, 1), 1))  # not your turn
-    print(game.move_piece("PlayerA", (6, 8), (0, 1), 1))  # invalid loc
-    print(game.move_piece("PlayerA", (0, 0), (0, 4), 1))  # invalid loc
-    print(game.move_piece("PlayerA", (0, 1), (0, 3), 4))  # invalid loc
-    print(game.move_piece("PlayerA", (2, 1), (0, 3), 2))  # invalid loc
-    print(game.move_piece("PlayerA", (0, 0), (0, 1), 1))
-    print(game.move_piece("PlayerB", (0, 2), (0, 3), 1))
-    print(game.move_piece("PlayerA", (0, 1), (0, 3), 2))
-    print(game.move_piece("PlayerB", (0, 3), (0, 1), 2))  # invalid loc
-    print(game.move_piece("PlayerB", (1, 0), (1, 1), 1))
-    print(game.move_piece("PlayerA", (0, 3), (5, 3), 5))  # invalid num of pieces
+    # print(game.move_piece("PlayerB", (0, 2), (0, 1), 1))  # not your turn
+    # print(game.move_piece("PlayerA", (6, 8), (0, 1), 1))  # invalid loc
+    # print(game.move_piece("PlayerA", (0, 0), (0, 4), 1))  # invalid loc
+    # print(game.move_piece("PlayerA", (0, 1), (0, 3), 4))  # invalid loc
+    # print(game.move_piece("PlayerA", (2, 1), (0, 3), 2))  # invalid loc
+    # print(game.move_piece("PlayerA", (0, 0), (0, 1), 1))
+    # print(game.move_piece("PlayerB", (0, 2), (0, 3), 1))
+    # print(game.move_piece("PlayerA", (0, 1), (0, 3), 2))
+    # print(game.move_piece("PlayerB", (0, 3), (0, 1), 2))  # invalid loc
+    # print(game.move_piece("PlayerB", (1, 0), (1, 1), 1))
+    # print(game.move_piece("PlayerA", (0, 3), (5, 3), 5))  # invalid num of pieces
     # print(game.validate_move("PlayerA", (0, 2), (0, 1), 1))  # invalid loc
     # print(game.validate_move("PlayerA", (0, 1), (0, 4), 3))  # invalid num of pieces
+
+    game._player1.set_reserve_pieces(1)
+    print(game.reserved_move("PlayerA", (0, 6)))  # invalid location
+    print(game.reserved_move("PlayerB", (0, 6)))  # not your turn
+    print(game.show_reserve("PlayerA"))
+    print(game.reserved_move("PlayerA", (0, 2)))
+    print(game.show_reserve("PlayerA"))
     game.show_board()
 
     # READ ME

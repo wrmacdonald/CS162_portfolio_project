@@ -44,6 +44,25 @@ class TestFocusGame(unittest.TestCase):
         game.move_piece("PlayerA", (0, 0), (0, 1), 1)
         self.assertEqual(game.move_piece("PlayerA", (0, 1), (0, 0), 2), "not your turn")
 
+    # print(game.move_piece("PlayerB", (0, 2), (0, 1), 1))  # not your turn
+    # print(game.move_piece("PlayerA", (6, 8), (0, 1), 1))  # invalid loc
+    # print(game.move_piece("PlayerA", (0, 0), (0, 4), 1))  # invalid loc
+    # print(game.move_piece("PlayerA", (0, 1), (0, 3), 4))  # invalid loc
+    # print(game.move_piece("PlayerA", (2, 1), (0, 3), 2))  # invalid loc
+    # print(game.move_piece("PlayerA", (0, 0), (0, 1), 1))
+    # print(game.move_piece("PlayerB", (0, 2), (0, 3), 1))
+    # print(game.move_piece("PlayerA", (0, 1), (0, 3), 2))
+    # print(game.move_piece("PlayerB", (0, 3), (0, 1), 2))  # invalid loc
+    # print(game.move_piece("PlayerB", (1, 0), (1, 1), 1))
+    # print(game.move_piece("PlayerA", (0, 3), (5, 3), 5))  # invalid num of pieces
+    # # print(game.validate_move("PlayerA", (0, 2), (0, 1), 1))  # invalid loc
+    # # print(game.validate_move("PlayerA", (0, 1), (0, 4), 3))  # invalid num of pieces
+
+    def test9G(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (0, 0), (0, 1), 1)
+        self.assertEqual(game.move_piece("PlayerA", (0, 1), (0, 0), 2), "not your turn")
+
 
 if __name__ == "__main__":
     unittest.main()
