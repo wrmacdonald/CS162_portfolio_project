@@ -77,22 +77,13 @@ class Board:
         for x in range(3, len(self._full_board_list), 4):
             self._full_board_list[x].append(p2_color)
 
-        # # initialize the game pieces @ index 2 (2nd level)
-        # for x in range(len(self._full_board_list)):
-        #     self._full_board_list[x].append("*")
-        # # initialize the game pieces @ index 3 (3rd level)
-        # for x in range(len(self._full_board_list)):
-        #     self._full_board_list[x].append("*")
-        # # initialize the game pieces @ index 4 (4th level)
-        # for x in range(len(self._full_board_list)):
-        #     self._full_board_list[x].append("*")
-        # # initialize the game pieces @ index 5 (5th level)
-        # for x in range(len(self._full_board_list)):
-        #     self._full_board_list[x].append("*")
-
     def get_full_board_list(self):
         """get method for _full_board_list"""
         return self._full_board_list
+
+    def set_full_board_list(self):
+        """set method for _full_board_list"""
+        pass
 
     # def move_pieces(self, s_coord, e_coord, num_pieces):               # remove pieces from "top" and return the pieces picked up
     #     """"""
@@ -219,9 +210,17 @@ class Player:
         """get method for player's _captured_pieces"""
         return self._captured_pieces
 
+    def set_captured_pieces(self, num_piece):
+        """set method for player's _captured_pieces, +1 to add a piece, -1 to remove a piece"""
+        self._captured_pieces += num_piece
+
     def get_reserve_pieces(self):
         """get method for player's _reserve_pieces"""
         return self._reserve_pieces
+
+    def set_reserve_pieces(self, num_piece):
+        """set method for player's _reserve_pieces, +1 to add a piece, -1 to remove a piece"""
+        self._reserve_pieces += num_piece
 
 
 # class FocusGame
@@ -267,6 +266,10 @@ class FocusGame:
         self._board = Board(self._player1.get_player_color(), self._player2.get_player_color())
         self._turn = self._player1
 
+    def validate_move(self, ):
+        """"""
+        pass
+
     def move_piece(self, move_p_name, start_loc, end_loc, num_pieces):
         """move method
         :param move_p_name: name of player who's trying to move
@@ -280,32 +283,14 @@ class FocusGame:
         :return: status message
         :rtype: str
         """
-        # p_turn = None
-        # if move_p_name == self._player1.get_player_name():
-        #     p_turn = self._player1
-        # elif move_p_name == self._player2.get_player_name():
-        #     p_turn = self._player2
-        # else:
-        #     return "who's trying to butt in"
-
-        # if self._turn is None:          # on first move, set player turn
-        #     self._turn = move_p_name
-        if self._turn is None:          # on first move, set player turn
-            if move_p_name == self._player1.get_player_name():
-                self._turn = self._player1
-            elif move_p_name == self._player2.get_player_name():
-                self._turn = self._player2
-            else:
-                return "who's trying to butt in"
-
-        # if move_p_name != self._turn:   # check if it's player's turn
-        #     return "not your turn"
+        # validation
         if move_p_name != self._turn.get_player_name():   # check if it's player's turn
             return "not your turn"
 
         # invalid locations (source or destination): return "invalid location"
         if not -1 < start_loc[0] < 6 or not -1 < start_loc[1] < 6 or not -1 < end_loc[0] < 6 or not -1 < end_loc[1] < 6:
             return "invalid location"
+        # or if end_loc is not num_pieces away from start_loc
 
     #     Board.move_pieces(self._board, start_loc, end_loc, num_pieces, self._turn)
     # want to move this into Board class method because it's getting verbose and is more of a board method
@@ -313,6 +298,7 @@ class FocusGame:
         picked_up = []  # hold pieces being moved
         for loc in self._board.get_full_board_list():
             if loc[0] == start_loc:  # find start coord
+                # change these indices to -1
                 if loc[len(loc) - 1] != self._turn.get_player_color():  # check if piece on top belongs to turn player
                     return "invalid location"
                 elif num_pieces <= (len(loc) - 1):  # check not trying to move more pieces than in stack
@@ -327,25 +313,57 @@ class FocusGame:
                     loc.append(picked_up[i - 1])  # add piece (one by one) to coord
 
         # alternate turns
-        if move_p_name == self._player1.get_player_name():
-            self._turn = self._player2
-        else:
-            self._turn = self._player1
+        self.set_turn(move_p_name)
+
+        #       check if stack is > 5:
+        #           capture bottom pieces that belong to other player
+        #           reserve bottom pieces that belong to current player
+        #       check if player wins, either player has captured pieces >= 6
+        #           return "<player_name> Wins"
+        #       make sure pieces can only move num_pieces amount
 
         return "successfully moved"
 
-#       check if stack is > 5:
-#           capture bottom pieces that belong to other player
-#           reserve bottom pieces that belong to current player
-#       check if player wins, either player has captured pieces >= 6
-#           return "<player_name> Wins"
-#       make sure pieces can only move num_pieces amount
+    def reserved_move(self, player_name, loc):
+        """move method for moving a piece from reserve,
+        return 'no pieces in reserve', if no pieces in reserve"""
+        pass
+
+    def show_pieces(self, loc):
+        """shows pieces at a location on the board
+        returns a list with pieces at that location, index 0 = base level"""
+        # add check that coords exist
+        for space in self._board.get_full_board_list():
+            if space[0] == loc:
+                return space[1:]
+
+    def show_reserve(self, player_name):
+        """return count of pieces in that player's reserve"""
+        return self.get_player_object(player_name).get_reserve_pieces()
+
+    def show_captured(self, player_name):
+        """return count of pieces in that player's captured"""
+        return self.get_player_object(player_name).get_captured_pieces()
+
+    def get_player_object(self, player_name):
+        """takes a player's name and returns the associated player object"""
+        if player_name == self._player1.get_player_name():
+            return self._player1
+        elif player_name == self._player2.get_player_name():
+            return self._player2
+        else:
+            return "not your turn"
 
     def get_turn(self):
         """get method for player_turn"""
         return self._turn
 
-
+    def set_turn(self, current_player_name):
+        """set method for player_turn"""
+        if current_player_name == self._player1.get_player_name():
+            self._turn = self._player2
+        else:
+            self._turn = self._player1
 
 
 def main():
@@ -418,16 +436,32 @@ def main():
     # print(game.move_piece("PlayerB", (0, 1), (0, 2), 1))
     # print(game.get_turn().get_player_name())  # player name whose turn it is
 
-    print(game.get_turn().get_player_name())
-    print(game.move_piece("PlayerB", (0, 3), (0, 5), 2))
-    print(game.get_turn().get_player_name())
-    print(game.move_piece("PlayerA", (0, 0), (0, 1), 1))
-    print(game.get_turn().get_player_name())
-    print(game.move_piece("PlayerB", (0, 2), (0, 3), 1))
-    print(game.get_turn().get_player_name())
+    # print(game.get_turn().get_player_name())
+    # print(game.move_piece("PlayerA", (0, 0), (0, 1), 1))
+    # print(game.get_turn().get_player_name())
+    # print(game.move_piece("PlayerB", (0, 2), (0, 3), 1))
+    # print(game.get_turn().get_player_name())
+    # print(game.move_piece("PlayerB", (0, 3), (0, 5), 2))
+    # print(game.get_turn().get_player_name())
     # print(game.move_piece("PlayerA", (0, 1), (0, 4), 2))
     # print(game.move_piece("PlayerB", (0, 3), (0, 5), 2))
-    game._board.show_board()
+
+    # print(game.get_player_object("PlayerA"))
+    # print(game.get_player_object("PlayerB"))
+    # print(game.get_player_object("PlayerX"))
+
+    # game._player1.set_reserve_pieces(1)
+    # game._player1.set_reserve_pieces(1)
+    # print(game.show_reserve("PlayerA"))
+    # print(game.show_reserve("PlayerB"))
+    # print(game.show_captured("PlayerA"))
+    # print(game.show_captured("PlayerB"))
+    # game._board.show_board()
+
+    print(game.show_pieces((0, 0)))
+    print(game.move_piece("PlayerA", (0, 1), (0, 0), 1))
+    print(game.show_pieces((0, 0)))
+    print(game.show_pieces((5, 5)))
 
     # READ ME
     # game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))

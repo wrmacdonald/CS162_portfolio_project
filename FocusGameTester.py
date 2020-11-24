@@ -28,12 +28,21 @@ class TestFocusGame(unittest.TestCase):
 
     def test5G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
-        self.assertEqual(game.move_piece("PlayerB", (0, 0), (0, 1), 1), "invalid location")
+        self.assertEqual(game.move_piece("PlayerA", (0, 0), (0, 1), 1), "successfully moved")
 
     def test6G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
         game.move_piece("PlayerA", (0, 0), (0, 1), 1)
         self.assertEqual(game.move_piece("PlayerB", (0, 1), (0, 0), 2), "invalid location")
+
+    def test7G(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        self.assertEqual(game.move_piece("PlayerB", (0, 1), (0, 0), 2), "not your turn")
+
+    def test8G(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (0, 0), (0, 1), 1)
+        self.assertEqual(game.move_piece("PlayerA", (0, 1), (0, 0), 2), "not your turn")
 
 
 if __name__ == "__main__":
