@@ -471,6 +471,8 @@ def main():
     # test_board.show_board()
 
     game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
+    # print(game._board.get_full_board_list())
+
     # # print(game._player1.get_player_color())
     # # print(game._player2.get_player_name())
     # # print(game._player2.get_captured_pieces())
@@ -529,12 +531,16 @@ def main():
     # print(game.validate_move("PlayerA", (0, 1), (0, 4), 3))  # invalid num of pieces
 
     game._player1.set_reserve_pieces(1)
-    print(game.reserved_move("PlayerA", (0, 6)))  # invalid location
-    print(game.reserved_move("PlayerB", (0, 6)))  # not your turn
-    print(game.show_reserve("PlayerA"))
-    print(game.reserved_move("PlayerA", (0, 2)))
-    print(game.show_reserve("PlayerA"))
-    game.show_board()
+    # print(game.reserved_move("PlayerA", (0, 6)))  # invalid location
+    # print(game.reserved_move("PlayerB", (0, 6)))  # not your turn
+    # print(game.show_reserve("PlayerA"))
+    # print(game.reserved_move("PlayerA", (0, 2)))
+    # print(game.show_reserve("PlayerA"))
+    # game.show_board()
+    # print(game._board.get_full_board_list())
+
+    game.reserved_move("PlayerA", (0, 2))
+    # print(game._board.get_full_board_list())
 
     # READ ME
     # game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
