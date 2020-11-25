@@ -83,6 +83,7 @@ class Board:
 
     def set_full_board_list(self):
         """set method for _full_board_list"""
+        # better way to do this???
         return self._full_board_list
 
     # def move_pieces(self, s_coord, e_coord, num_pieces):               # remove pieces from "top" and return the pieces picked up
@@ -324,6 +325,8 @@ class FocusGame:
         elif val == "i_n_o_p":
             return "invalid number of pieces"
 
+        # move
+        player_obj = self.get_player_object(player_name)
         picked_up = []  # hold pieces being moved
         for loc in self._board.get_full_board_list():
             if loc[0] == start_loc:  # find start coord
@@ -342,10 +345,14 @@ class FocusGame:
         #           capture bottom pieces that belong to other player
         #           reserve bottom pieces that belong to current player
         # make a separate func to do that? then call during reserved move also?
+        self.check_height(player_obj, end_loc)
 
         #       check if player wins, either player has captured pieces >= 6
         #           return "<player_name> Wins"
         # make a separate func to do that? then call during reserved move also?
+        # check win condition
+        if player_obj.get_captured_pieces() >= 6:
+            return f"{player_obj.get_player_name()} Wins"
 
         return "successfully moved"
 
@@ -370,16 +377,50 @@ class FocusGame:
         player_obj.set_reserve_pieces(-1)                   # remove piece from player's reserve
 
         # call new funcs: check height and win condition
+        self.check_height(player_obj, location)
+
+        # check win condition
+        if player_obj.get_captured_pieces() >= 6:
+            return f"{player_obj.get_player_name()} Wins"
 
         # alternate turns
         self.set_turn(player_name)
 
         return "successfully moved"
 
+    def check_height(self, player_obj, location):
+        """method to check if stack of pieces is > 5 tall: if so:
+        capture bottom pieces that belong to other player and/or reserve bottom pieces that belong to current player"""
+        for loc in self._board.set_full_board_list():
+            if loc[0] == location:  # find coord
+                while len(loc) > 6:
+                    bottom_piece = loc[1]
+                    if bottom_piece == player_obj.get_player_color():
+                        player_obj.set_reserve_pieces(1)
+                    else:
+                        player_obj.set_captured_pieces(1)
+                    del loc[1]
+
+    # def check_win(self, player_obj):
+    #     """method to check win condition
+    #     :param player_obj:
+    #     :type player_obj:
+    #     :return:
+    #     :rtype:
+    #     """
+    #     if player_obj.get_captured_pieces() >= 6:
+    #         return f"{player_obj.get_player_name()} Wins"
+
     def show_pieces(self, loc):
         """shows pieces at a location on the board
         returns a list with pieces at that location, index 0 = base level"""
-        # add check that coords exist
+
+        # validation check that coords exist
+        val = self.validate_move(self._turn.get_player_name(), loc, (0, 0), 1)
+        if val == "i_s_l":
+            return "invalid location"
+
+        # return list of pieces
         for space in self._board.get_full_board_list():
             if space[0] == loc:
                 return space[1:]
@@ -530,7 +571,7 @@ def main():
     # print(game.validate_move("PlayerA", (0, 2), (0, 1), 1))  # invalid loc
     # print(game.validate_move("PlayerA", (0, 1), (0, 4), 3))  # invalid num of pieces
 
-    game._player1.set_reserve_pieces(1)
+    # game._player1.set_reserve_pieces(1)
     # print(game.reserved_move("PlayerA", (0, 6)))  # invalid location
     # print(game.reserved_move("PlayerB", (0, 6)))  # not your turn
     # print(game.show_reserve("PlayerA"))
@@ -539,8 +580,43 @@ def main():
     # game.show_board()
     # print(game._board.get_full_board_list())
 
-    game.reserved_move("PlayerA", (0, 2))
+    # game._player1.set_reserve_pieces(1)
+    # game.reserved_move("PlayerA", (0, 2))
     # print(game._board.get_full_board_list())
+
+    # game.move_piece("PlayerA", (0, 1), (0, 0), 1)
+    # print(game.show_pieces((0, 0)))
+
+    # stack on (2, 2)
+    # player1_obj = game.get_player_object("PlayerA")
+    # print(game.show_reserve("PlayerA"))
+    # print(game.show_reserve("PlayerB"))
+    # print(game.show_captured("PlayerA"))
+    # print(game.show_captured("PlayerB"))
+    # print(game.move_piece("PlayerA", (2, 1), (2, 0), 1))
+    # print(game.move_piece("PlayerB", (0, 3), (0, 2), 1))
+    # print(game.move_piece("PlayerA", (2, 0), (2, 2), 2))
+    # print(game.move_piece("PlayerB", (0, 2), (2, 2), 2))
+    # print(game.move_piece("PlayerA", (1, 2), (2, 2), 1))
+    # # print(game.move_piece("PlayerA", (2, 5), (2, 4), 1))
+    # # print(game.move_piece("PlayerB", (4, 3), (4, 2), 1))
+    # # print(game.move_piece("PlayerA", (2, 4), (2, 2), 2))
+    # # game.check_height(player1_obj, (2, 2))
+    # print(game.move_piece("PlayerB", (2, 3), (2, 2), 1))
+    # print(game.move_piece("PlayerA", (3, 2), (2, 2), 1))
+    # print(game.show_reserve("PlayerA"))
+    # print(game.show_reserve("PlayerB"))
+    # print(game.show_captured("PlayerA"))
+    # print(game.show_captured("PlayerB"))
+    # game.show_board()
+
+    player1_obj = game.get_player_object("PlayerA")
+    player1_obj.set_captured_pieces(5)
+    print(game.move_piece("PlayerA", (2, 1), (2, 0), 1))
+    player1_obj.set_captured_pieces(1)
+    print(game.move_piece("PlayerB", (0, 3), (0, 2), 1))
+    print(game.move_piece("PlayerA", (2, 0), (2, 2), 2))
+    game.show_board()
 
     # READ ME
     # game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))

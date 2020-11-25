@@ -168,6 +168,108 @@ class TestFocusGame(unittest.TestCase):
         game.reserved_move("PlayerA", (0, 1))
         self.assertEqual(game._board.get_full_board_list(), end_board)
 
+    def test1_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        self.assertEqual(game.show_reserve("PlayerA"), 0)
+
+    def test2_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        self.assertEqual(game.show_captured("PlayerA"), 0)
+
+    def test3_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        self.assertEqual(game.show_reserve("PlayerB"), 0)
+
+    def test4_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        self.assertEqual(game.show_captured("PlayerB"), 0)
+
+    def test5_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        game.move_piece("PlayerB", (0, 3), (0, 2), 1)
+        game.move_piece("PlayerA", (2, 0), (2, 2), 2)
+        game.move_piece("PlayerB", (0, 2), (2, 2), 2)
+        game.move_piece("PlayerA", (1, 2), (2, 2), 1)
+        self.assertEqual(game.show_captured("PlayerA"), 1)
+
+    def test6_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        game.move_piece("PlayerB", (0, 3), (0, 2), 1)
+        game.move_piece("PlayerA", (2, 0), (2, 2), 2)
+        game.move_piece("PlayerB", (0, 2), (2, 2), 2)
+        game.move_piece("PlayerA", (1, 2), (2, 2), 1)
+        self.assertEqual(game.show_reserve("PlayerA"), 0)
+
+    def test7_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        game.move_piece("PlayerB", (0, 3), (0, 2), 1)
+        game.move_piece("PlayerA", (2, 0), (2, 2), 2)
+        game.move_piece("PlayerB", (0, 2), (2, 2), 2)
+        game.move_piece("PlayerA", (1, 2), (2, 2), 1)
+        game.move_piece("PlayerB", (2, 3), (2, 2), 1)
+        self.assertEqual(game.show_captured("PlayerB"), 1)
+
+    def test8_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        game.move_piece("PlayerB", (0, 3), (0, 2), 1)
+        game.move_piece("PlayerA", (2, 0), (2, 2), 2)
+        game.move_piece("PlayerB", (0, 2), (2, 2), 2)
+        game.move_piece("PlayerA", (1, 2), (2, 2), 1)
+        game.move_piece("PlayerB", (2, 3), (2, 2), 1)
+        game.move_piece("PlayerA", (3, 2), (2, 2), 1)
+        self.assertEqual(game.show_reserve("PlayerA"), 1)
+
+    def test9_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        game.move_piece("PlayerB", (0, 3), (0, 2), 1)
+        game.move_piece("PlayerA", (2, 0), (2, 2), 2)
+        game.move_piece("PlayerB", (0, 2), (2, 2), 2)
+        game.move_piece("PlayerA", (1, 2), (2, 2), 1)
+        game.move_piece("PlayerB", (2, 3), (2, 2), 1)
+        game.move_piece("PlayerA", (3, 2), (2, 2), 1)
+        self.assertEqual(game.show_captured("PlayerA"), 1)
+
+    def test10_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        game.move_piece("PlayerB", (0, 3), (0, 2), 1)
+        game.move_piece("PlayerA", (2, 0), (2, 2), 2)
+        game.move_piece("PlayerB", (0, 2), (2, 2), 2)
+        game.move_piece("PlayerA", (1, 2), (2, 2), 1)
+        game.move_piece("PlayerB", (2, 3), (2, 2), 1)
+        game.move_piece("PlayerA", (3, 2), (2, 2), 1)
+        game.move_piece("PlayerB", (1, 1), (1, 0), 1)
+        game.move_piece("PlayerA", (2, 5), (2, 4), 1)
+        game.move_piece("PlayerB", (3, 1), (2, 1), 1)
+        game.move_piece("PlayerA", (2, 4), (2, 2), 2)
+        self.assertEqual(game.show_captured("PlayerA"), 3)
+
+    def test11_check_height(self):
+        game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
+        game.move_piece("PlayerA", (2, 1), (2, 0), 1)
+        game.move_piece("PlayerB", (0, 3), (0, 2), 1)
+        game.move_piece("PlayerA", (2, 0), (2, 2), 2)
+        game.move_piece("PlayerB", (0, 2), (2, 2), 2)
+        game.move_piece("PlayerA", (1, 2), (2, 2), 1)
+        game.move_piece("PlayerB", (2, 3), (2, 2), 1)
+        game.move_piece("PlayerA", (3, 2), (2, 2), 1)
+        game.move_piece("PlayerB", (1, 1), (1, 0), 1)
+        game.move_piece("PlayerA", (2, 5), (2, 4), 1)
+        game.move_piece("PlayerB", (3, 1), (2, 1), 1)
+        game.move_piece("PlayerA", (2, 4), (2, 2), 2)
+        game.move_piece("PlayerB", (2, 1), (2, 2), 1)
+        # print(game.show_board())
+        self.assertEqual(game.show_captured("PlayerB"), 2)
+
 
 if __name__ == "__main__":
     unittest.main()
