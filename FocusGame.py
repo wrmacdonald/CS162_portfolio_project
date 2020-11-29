@@ -511,7 +511,7 @@ def main():
     # test_board.move_pieces((0, 1), (0, 2), 2)
     # test_board.show_board()
 
-    game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
+    # game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
     # print(game._board.get_full_board_list())
 
     # # print(game._player1.get_player_color())
@@ -610,21 +610,21 @@ def main():
     # print(game.show_captured("PlayerB"))
     # game.show_board()
 
-    player1_obj = game.get_player_object("PlayerA")
-    player1_obj.set_captured_pieces(5)
-    print(game.move_piece("PlayerA", (2, 1), (2, 0), 1))
-    player1_obj.set_captured_pieces(1)
-    print(game.move_piece("PlayerB", (0, 3), (0, 2), 1))
-    print(game.move_piece("PlayerA", (2, 0), (2, 2), 2))
-    game.show_board()
+    # player1_obj = game.get_player_object("PlayerA")
+    # player1_obj.set_captured_pieces(5)
+    # print(game.move_piece("PlayerA", (2, 1), (2, 0), 1))
+    # player1_obj.set_captured_pieces(1)
+    # print(game.move_piece("PlayerB", (0, 3), (0, 2), 1))
+    # print(game.move_piece("PlayerA", (2, 0), (2, 2), 2))
+    # game.show_board()
 
     # READ ME
-    # game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
-    # game.move_piece('PlayerA', (0, 0), (0, 1), 1)  # Returns message "successfully moved"
-    # game.show_pieces((0, 1))  # Returns ['R','R']
-    # game.show_captured('PlayerA')  # Returns 0
-    # game.reserved_move('PlayerA', (0, 0))  # Returns message "No pieces in reserve"
-    # game.show_reserve('PlayerA')  # Returns 0
+    game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
+    print(game.move_piece('PlayerA', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
+    print(game.show_pieces((0, 1)))  # Returns ['R','R']
+    print(game.show_captured('PlayerA'))  # Returns 0
+    print(game.reserved_move('PlayerA', (0, 0)))  # Returns message "No pieces in reserve"
+    print(game.show_reserve('PlayerA'))  # Returns 0
 
 
 if __name__ == '__main__':
