@@ -297,6 +297,8 @@ class TestFocusGame(unittest.TestCase):
         # print(game.show_board())
         self.assertEqual(game.show_captured("PlayerB"), 2)
 
+    # write tests to see if other names/colors work
+
 
 if __name__ == "__main__":
     unittest.main()
