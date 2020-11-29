@@ -33,39 +33,39 @@ class TestFocusGame(unittest.TestCase):
     def test6G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
         game.move_piece("PlayerA", (0, 0), (0, 1), 1)
-        self.assertEqual(game.move_piece("PlayerB", (0, 1), (0, 0), 2), "invalid location")
+        self.assertEqual(game.move_piece("PlayerB", (0, 1), (0, 0), 2), False)
 
     def test7G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
-        self.assertEqual(game.move_piece("PlayerB", (0, 1), (0, 0), 2), "not your turn")
+        self.assertEqual(game.move_piece("PlayerB", (0, 1), (0, 0), 2), False)
 
     def test8G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
         game.move_piece("PlayerA", (0, 0), (0, 1), 1)
-        self.assertEqual(game.move_piece("PlayerA", (0, 1), (0, 0), 2), "not your turn")
+        self.assertEqual(game.move_piece("PlayerA", (0, 1), (0, 0), 2), False)
 
     def test9G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
-        self.assertEqual(game.move_piece("PlayerA", (6, 8), (0, 1), 1), "invalid location")
+        self.assertEqual(game.move_piece("PlayerA", (6, 8), (0, 1), 1), False)
 
     def test10G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
-        self.assertEqual(game.move_piece("PlayerA", (0, 0), (0, 4), 1), "invalid location")
+        self.assertEqual(game.move_piece("PlayerA", (0, 0), (0, 4), 1), False)
 
     def test11G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
-        self.assertEqual(game.move_piece("PlayerA", (0, 1), (0, 3), 4), "invalid location")
+        self.assertEqual(game.move_piece("PlayerA", (0, 1), (0, 3), 4), False)
 
     def test12G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
-        self.assertEqual(game.move_piece("PlayerA", (2, 1), (0, 3), 2), "invalid location")
+        self.assertEqual(game.move_piece("PlayerA", (2, 1), (0, 3), 2), False)
 
     def test13G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
         game.move_piece("PlayerA", (0, 0), (0, 1), 1)
         game.move_piece("PlayerB", (0, 2), (0, 3), 1)
         game.move_piece("PlayerA", (0, 1), (0, 3), 2)
-        self.assertEqual(game.move_piece("PlayerB", (0, 3), (0, 1), 2), "invalid location")
+        self.assertEqual(game.move_piece("PlayerB", (0, 3), (0, 1), 2), False)
 
     def test14G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
@@ -80,7 +80,7 @@ class TestFocusGame(unittest.TestCase):
         game.move_piece("PlayerB", (0, 2), (0, 3), 1)
         game.move_piece("PlayerA", (0, 1), (0, 3), 2)
         game.move_piece("PlayerB", (1, 0), (1, 1), 1)
-        self.assertEqual(game.move_piece("PlayerA", (0, 3), (5, 3), 5), "invalid number of pieces")
+        self.assertEqual(game.move_piece("PlayerA", (0, 3), (5, 3), 5), False)
 
     def test16G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
@@ -100,19 +100,19 @@ class TestFocusGame(unittest.TestCase):
 
     def test18G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
-        self.assertEqual(game.move_piece("PlayerA", (0, 2), (0, 1), 1), "invalid location")
+        self.assertEqual(game.move_piece("PlayerA", (0, 2), (0, 1), 1), False)
 
     def test19G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
-        self.assertEqual(game.move_piece("PlayerA", (0, 4), (0, 1), 1), "invalid location")
+        self.assertEqual(game.move_piece("PlayerA", (0, 4), (0, 1), 1), False)
 
     def test20G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
-        self.assertEqual(game.move_piece("PlayerA", (0, 4), (0, 1), 3), "invalid number of pieces")
+        self.assertEqual(game.move_piece("PlayerA", (0, 4), (0, 1), 3), False)
 
     def test21G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
-        self.assertEqual(game.reserved_move("PlayerA", (0, 4)), "no pieces in reserve")
+        self.assertEqual(game.reserved_move("PlayerA", (0, 4)), False)
 
     def test22G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
@@ -122,17 +122,17 @@ class TestFocusGame(unittest.TestCase):
     def test23G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
         game._player1.set_reserve_pieces(1)
-        self.assertEqual(game.reserved_move("PlayerA", (10, 7)), "invalid location")
+        self.assertEqual(game.reserved_move("PlayerA", (10, 7)), False)
 
     def test24G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
         game._player1.set_reserve_pieces(1)
-        self.assertEqual(game.reserved_move("PlayerA", (4, -4)), "invalid location")
+        self.assertEqual(game.reserved_move("PlayerA", (4, -4)), False)
 
     def test25G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))
         game._player1.set_reserve_pieces(1)
-        self.assertEqual(game.reserved_move("PlayerB", (0, 4)), "not your turn")
+        self.assertEqual(game.reserved_move("PlayerB", (0, 4)), False)
 
     def test26G(self):
         game = FocusGame.FocusGame(("PlayerA", "R"), ("PlayerB", "G"))

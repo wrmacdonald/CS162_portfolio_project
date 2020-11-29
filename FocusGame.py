@@ -319,11 +319,11 @@ class FocusGame:
         #     return "not your turn"
         val = self.validate_move(player_name, start_loc, end_loc, num_pieces)
         if val == "n_y_t":
-            return "not your turn"
+            return False
         elif val == "i_l" or val == "i_s_l" or val == "i_e_l":
-            return "invalid location"
+            return False
         elif val == "i_n_o_p":
-            return "invalid number of pieces"
+            return False
 
         # move
         player_obj = self.get_player_object(player_name)
@@ -362,14 +362,14 @@ class FocusGame:
         # validation
         val = self.validate_move(player_name, (0, 0), location, 1)
         if val == "n_y_t":
-            return "not your turn"
+            return False
         elif val == "i_e_l":
-            return "invalid location"
+            return False
 
         # move
         player_obj = self.get_player_object(player_name)    # check there's pieces in player's reserve
         if player_obj.get_reserve_pieces() <= 0:
-            return "no pieces in reserve"
+            return False
         else:                                               # add piece to board location
             for loc in self._board.set_full_board_list():
                 if loc[0] == location:
@@ -623,7 +623,7 @@ def main():
     print(game.move_piece('PlayerA', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
     print(game.show_pieces((0, 1)))  # Returns ['R','R']
     print(game.show_captured('PlayerA'))  # Returns 0
-    print(game.reserved_move('PlayerA', (0, 0)))  # Returns message "No pieces in reserve"
+    print(game.reserved_move('PlayerA', (0, 0)))  # Returns False, not per update (message "No pieces in reserve")
     print(game.show_reserve('PlayerA'))  # Returns 0
 
 
