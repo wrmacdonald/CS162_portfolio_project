@@ -297,7 +297,11 @@ class TestFocusGame(unittest.TestCase):
         # print(game.show_board())
         self.assertEqual(game.show_captured("PlayerB"), 2)
 
-    # write tests to see if other names/colors work
+    def test1(self):
+        game = FocusGame.FocusGame(("PlA-ah", "Red"), ("Ble-ah", "Gre"))
+        game.move_piece("PlA-ah", (0, 0), (0, 1), 1)
+        # game.show_board()
+        self.assertEqual(game.move_piece("Ble-ah", (0, 2), (0, 3), 1), "successfully moved")
 
 
 if __name__ == "__main__":

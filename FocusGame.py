@@ -259,7 +259,8 @@ class FocusGame:
         for loc in self._board.get_full_board_list():  # loop through locations on board
             if loc[0] == start_loc:  # find start coord
                 for i in range(num_pieces):  # for each piece being moved
-                    picked_up += loc[len(loc) - 1]  # add moved piece (from top of stack) to picked_up
+                    # picked_up += loc[len(loc) - 1]  # add moved piece (from top of stack) to picked_up
+                    picked_up.append(loc[len(loc) - 1])  # add moved piece (from top of stack) to picked_up
                     del loc[len(loc) - 1]  # delete moved piece (from top of stack)
         for loc in self._board.get_full_board_list():  # loop through locations on board
             if loc[0] == end_loc:  # find end coord
@@ -572,6 +573,13 @@ def main():
     # print(game.move_piece("PlayerA", (0, 1), (1, 0), 1))
     # print(game.show_pieces((0, 0)))
     # game.show_board()
+
+    game = FocusGame(("PlA-ah", "Red"), ("Ble-ah", "Gre"))
+    print(game.move_piece("PlA-ah", (0, 0), (0, 1), 1))
+    print(game.move_piece("Ble-ah", (0, 2), (0, 3), 1))
+    print(game.move_piece("PlA-ah", (0, 1), (1, 1), 6))
+    print(game.move_piece("Ble-ah", (0, 3), (1, 3), 6))
+    game.show_board()
 
     # READ ME
     # game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
