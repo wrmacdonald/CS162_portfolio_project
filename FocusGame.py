@@ -1,6 +1,6 @@
 # Name: Wes MacDonald
-# Date: 11/20/2020
-# Description:
+# Date: 11/30/2020
+# Description: A program to simulate playing the abstract board game Focus/Domination
 
 # Pseudocode
 # class FocusGame
@@ -153,35 +153,6 @@ class Player:
         self._reserve_pieces += num_piece
 
 
-# class FocusGame
-#   init method, (("player1_name", "p1_color"), ("player2_name", "p2_color")):
-#       board being a list of lists, don't include 1x4 side extensions
-#       initialize the pieces on the board, from (0,0) to (5,5), (row, col)
-#       _turn = None
-#   move_piece method ("player_name", (start_loc coord), (end_loc coord), num_pieces)
-#       check if move is valid
-#           player move out of turn: return "not your turn"
-#           invalid locations (source or destination): return "invalid location"
-#           player move invalid num of pieces: return "invalid number of pieces"
-#       make move, edit lists...
-#       return "successfully moved
-#       check if stack is > 5:
-#           capture bottom pieces that belong to other player
-#           reserve bottom pieces that belong to current player
-#       check if player wins, either player has captured pieces >= 6
-#           return "<player_name> Wins"
-#   show_pieces method, (loc coord)
-#       return list of pieces at that location, [bottom piece, ..., top piece]
-#   show_reserve method, ("player_name")
-#       return player_name.get_reserve_pieces
-#   show_captured method, ("player_name")
-#       return player_name.get_captured_pieces
-#   reserved_move method ("player_name", loc coord)
-#       if player_name.get_reserve_pieces >= 1
-#           player_name.set_reserve_pieces(player_name.get_reserve_pieces - 1)
-#           play piece to loc coord
-#       else
-#           return "no pieces in reserve"
 class FocusGame:
     """represents the game"""
     def __init__(self, p1_tup, p2_tup):
@@ -574,20 +545,20 @@ def main():
     # print(game.show_pieces((0, 0)))
     # game.show_board()
 
-    game = FocusGame(("PlA-ah", "Red"), ("Ble-ah", "Gre"))
-    print(game.move_piece("PlA-ah", (0, 0), (0, 1), 1))
-    print(game.move_piece("Ble-ah", (0, 2), (0, 3), 1))
-    print(game.move_piece("PlA-ah", (0, 1), (1, 1), 6))
-    print(game.move_piece("Ble-ah", (0, 3), (1, 3), 6))
-    game.show_board()
+    # game = FocusGame(("PlA-ah", "Red"), ("Ble-ah", "Gre"))
+    # print(game.move_piece("PlA-ah", (0, 0), (0, 1), 1))
+    # print(game.move_piece("Ble-ah", (0, 2), (0, 3), 1))
+    # print(game.move_piece("PlA-ah", (0, 1), (1, 1), 6))
+    # print(game.move_piece("Ble-ah", (0, 3), (1, 3), 6))
+    # game.show_board()
 
     # READ ME
-    # game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
-    # print(game.move_piece('PlayerA', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
-    # print(game.show_pieces((0, 1)))  # Returns ['R','R']
-    # print(game.show_captured('PlayerA'))  # Returns 0
-    # print(game.reserved_move('PlayerA', (0, 0)))  # Returns False, not per update (message "No pieces in reserve")
-    # print(game.show_reserve('PlayerA'))  # Returns 0
+    game = FocusGame(('PlayerA', 'R'), ('PlayerB', 'G'))
+    print(game.move_piece('PlayerA', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
+    print(game.show_pieces((0, 1)))  # Returns ['R','R']
+    print(game.show_captured('PlayerA'))  # Returns 0
+    print(game.reserved_move('PlayerA', (0, 0)))  # Returns False, not per update (message "No pieces in reserve")
+    print(game.show_reserve('PlayerA'))  # Returns 0
 
 
 if __name__ == '__main__':
